@@ -1,9 +1,11 @@
 import * as React from "react";
+import { collection,addDoc } from 'firebase/firestore';
 import { experimentalStyled as styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import ImageComponent from "../components/ImageComponent";
+import {db} from '../config/firebase';
 import {
   Button,
   FormControl,
@@ -22,6 +24,7 @@ import ImageComponentThree from "../components/ImageComponentThree";
 // import Gender from "../components/Gender";
 // import age from "@mui/material";
 import { useState } from "react";
+import FileUpload from "../components/FileUplode";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -34,11 +37,40 @@ export default function BoxRow() {
   const marginH1 = {
     margin: 0,
   };
-  const [age, setAge] = useState("");
+  
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const handleGenderChange = (event) => {
+    setselectedgender(event.target.value);
   };
+
+  const handleBloodGroupChange = (event) => {
+    setselectedbloodgroup(event.target.value);
+  };
+  const[newfirstName,setnewfirstName]= useState("");
+  const[newlastName,setnewlastName]= useState("");
+  const[newfatherName,setnewfatherName]= useState("");
+  const[newmotherName,setnewmotherName]= useState("");
+  const[newdateOfBirth,setnewdateOfBirth]= useState("");
+  const[selectedgender,setselectedgender]=useState("");
+  const[selectedbloodgroup,setselectedbloodgroup]=useState("");
+  const[newaadharNo,setnewaadharNo]= useState("");
+  const[newemail,setnewemail]= useState("");
+  const[newmobileNo,setnewmobileNo]= useState("");
+  const[newadmissionNumber,setnewadmissionNumber]= useState("");
+  const[newjoiningDate,setnewjoiningDate]= useState("");
+  const[newrollNumber,setnewrollNumber]= useState("");
+ 
+
+  const [students] = useState([]);
+  
+  const usersCollectionRef = collection(db,"student");
+
+  const studentForm = async () => {
+    
+    await addDoc(usersCollectionRef, {FirstsName:newfirstName,LastName:newlastName,Fathername:newfatherName,Mothername:newmotherName,DateofBirth:newdateOfBirth,Gender:selectedgender,BloodGroup:selectedbloodgroup,AadharNo:newaadharNo,Email:newemail,MobileNo:newmobileNo,Admissionno:newadmissionNumber,Joiningdate:newjoiningDate,Rollno:newrollNumber});
+    alert("Successfully Noted!!");
+  }
+
 
   return (
     <>
@@ -129,24 +161,28 @@ export default function BoxRow() {
                           label="First Name"
                           type="text"
                           variant="outlined"
+                          onChange={(e)=>{setnewfirstName(e.target.value)}}
                         />
                         <TextField
                           id="outlined-basic"
                           label="Last Name"
                           type="text"
                           variant="outlined"
+                          onChange={(e)=>{setnewlastName(e.target.value)}}
                         />
                         <TextField
                           id="outlined-basic"
                           label="Father Name"
                           type="text"
                           variant="outlined"
+                          onChange={(e)=>{setnewfatherName(e.target.value)}}
                         />
                         <TextField
                           id="outlined-basic"
                           label="Mother Name"
                           type="text"
                           variant="outlined"
+                          onChange={(e)=>{setnewmotherName(e.target.value)}}
                         />
                         <TextField
                           id="outlined-basic"
@@ -154,54 +190,52 @@ export default function BoxRow() {
                           type="text"
                           format="dd-mm-yyyy"
                           variant="outlined"
+                          onChange={(e)=>{setnewdateOfBirth(e.target.value)}}
                         />
                       </Stack>
                       <Stack spacing={2} direction="column" width={300}>
                         {/* <h1>Personal Details</h1> */}
 
                         <FormControl fullWidth>
-                          <InputLabel id="demo-simple-select-label">
-                            Age
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={age}
-                            label="Age"
-                            onChange={handleChange}
-                          >
-                            <MenuItem value={10}>Male</MenuItem>
-                            <MenuItem value={20}>Female</MenuItem>
-                            <MenuItem value={30}>Others</MenuItem>
-                          </Select>
-                        </FormControl>
-                        <FormControl fullWidth>
-                          <InputLabel id="demo-simple-select-label">
-                            Blood Group
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={age}
-                            label="Blood Group"
-                            onChange={handleChange}
-                          >
-                            <MenuItem value={10}>A+</MenuItem>
-                            <MenuItem value={20}>B+</MenuItem>
-                            <MenuItem value={30}>AB+</MenuItem>
-                            <MenuItem value={30}>O+</MenuItem>
-                            <MenuItem value={30}>A-</MenuItem>
-                            <MenuItem value={30}>B-</MenuItem>
-                            <MenuItem value={30}>AB-</MenuItem>
-                            <MenuItem value={30}>O-</MenuItem>
-                          </Select>
-                        </FormControl>
+        <InputLabel id="demo-simple-select-label">Gender</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          label="Gender"
+          onChange={handleGenderChange}
+        >
+          <MenuItem value="Male">Male</MenuItem>
+          <MenuItem value="Female">Female</MenuItem>
+          <MenuItem value="Other">Other</MenuItem>
+        </Select>
+      </FormControl>
+      
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label-blood-group">Blood Group</InputLabel>
+        <Select
+          labelId="demo-simple-select-label-blood-group"
+          id="demo-simple-select-blood-group"
+          //value={bloodGroup}
+          label="Blood Group"
+          onChange={handleBloodGroupChange}
+        >
+          <MenuItem value="A+">A+</MenuItem>
+          <MenuItem value="A-">A-</MenuItem>
+          <MenuItem value="B+">B+</MenuItem>
+          <MenuItem value="B-">B-</MenuItem>
+          <MenuItem value="O+">O+</MenuItem>
+          <MenuItem value="O-">O-</MenuItem>
+          <MenuItem value="AB+">AB+</MenuItem>
+          <MenuItem value="AB-">AB-</MenuItem>
+        </Select>
+      </FormControl>
 
                         <TextField
                           id="outlined-basic"
                           label="Aadhar No"
                           type="number"
                           variant="outlined"
+                          onChange={(e)=>{setnewaadharNo(e.target.value)}}
                         />
 
                         <TextField
@@ -209,12 +243,14 @@ export default function BoxRow() {
                           label="Email"
                           type="email"
                           variant="outlined"
+                          onChange={(e)=>{setnewemail(e.target.value)}}
                         />
                         <TextField
                           id="outlined-basic"
                           label="Mobile No"
                           type="number"
                           variant="outlined"
+                          onChange={(e)=>{setnewmobileNo(e.target.value)}}
                         />
                       </Stack>
                       <Stack spacing={2} direction="column" width={300}>
@@ -224,12 +260,14 @@ export default function BoxRow() {
                           label="Admission Number"
                           type="number"
                           variant="outlined"
+                          onChange={(e)=>{setnewadmissionNumber(e.target.value)}}
                         />
                         <TextField
                           id="outlined-basic"
                           label="Joining Date"
                           type="text"
                           variant="outlined"
+                          onChange={(e)=>{setnewjoiningDate(e.target.value)}}
                         />
 
                         <TextField
@@ -237,9 +275,10 @@ export default function BoxRow() {
                           label="Roll Number"
                           type="number"
                           variant="outlined"
+                          onChange={(e)=>{setnewrollNumber(e.target.value)}}
                         />
-
-                        <Button variant="contained">Submit</Button>
+                        <FileUpload/>
+                        <Button variant="contained" onClick={studentForm}>Submit</Button>
                       </Stack>
                     </Stack>
                   </Item>
